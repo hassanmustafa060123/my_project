@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,Arial,sans-serif;background:#0f0f1a;color:#f0f0f0;min-height:100vh}
+header{background:#13131f;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:0;z-index:50}
+.logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#e94560,#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 4px 14px rgba(233,69,96,.35)}
+.brand{display:flex;gap:10px;align-items:center}
+.brand-name{font-weight:800;font-size:16px;color:#fff}
+.brand-sub{font-size:11px;color:#666}
+.search{flex:1;margin:0 16px;max-width:380px}
+.search input{width:100%;padding:9px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#f0f0f0;font-size:13px;outline:none}
+.search input:focus{border-color:#e94560}
+.search input::placeholder{color:#555}
+.cart-btn{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#e94560,#ff6b6b);color:#fff;border:none;padding:9px 15px;border-radius:9px;cursor:pointer;font-family:Tahoma,Arial,sans-serif;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(233,69,96,.3)}
+.cbadge{background:#fff;color:#e94560;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:800;font-size:11px}
+.hero{padding:36px 20px 24px;text-align:center;background:linear-gradient(180deg,#16213e,#0f0f1a)}
+.hero h1{font-size:30px;font-weight:800;background:linear-gradient(135deg,#fff 40%,#e94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:#777;margin-top:8px;font-size:14px}
+.filters{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.fb{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#999;cursor:pointer;font-family:Tahoma,Arial,sans-serif;font-size:12px;transition:.2s}
+.fb:hover,.fb.active{background:#e94560;border-color:#e94560;color:#fff}
+.sort-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.05)}
+.count{font-size:13px;color:#666}
+.sort-sel{background:#13131f;border:1px solid rgba(255,255,255,.1);color:#aaa;padding:6px 10px;border-radius:8px;font-family:Tahoma,Arial,sans-serif;font-size:12px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;padding:18px}
+.card{background:#1a1a2e;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:.25s;position:relative;cursor:pointer}
+.card:hover{transform:translateY(-3px);border-color:rgba(233,69,96,.35);box-shadow:0 10px 32px rgba(233,69,96,.12)}
+.btag{position:absolute;top:10px;right:10px;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;z-index:2}
+.btag.new{background:#e94560;color:#fff}
+.btag.sale{background:#f0a500;color:#1a1a00}
+.btag.hot{background:#7c3aed;color:#fff}
+.card-img{width:100%;height:160px;object-fit:cover;background:#16213e;display:block}
+.card-body{padding:12px;flex:1;display:flex;flex-direction:column}
+.card-brand{font-size:10px;color:#e94560;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.card-name{font-weight:700;font-size:13px;color:#f0f0f0;margin-bottom:2px;line-height:1.4}
+.card-cat{font-size:11px;color:#666;margin-bottom:8px}
+.card-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.card-price{color:#e94560;font-weight:800;font-size:16px}
+.old-price{color:#555;font-size:11px;text-decoration:line-through}
+.stars{color:#f0a500;font-size:11px}
+.card-actions{display:flex;gap:6px;margin-top:auto}
+.ssel{flex:0 0 66px;padding:7px 6px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:#0f0f1a;color:#f0f0f0;font-family:Tahoma,Arial,sans-serif;font-size:12px;outline:none}
+.abtn{flex:1;padding:8px;border-radius:7px;border:none;background:linear-gradient(135deg,#e94560,#ff6b6b);color:#fff;font-family:Tahoma,Arial,sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:.15s}
+.abtn:hover{opacity:.85}
+.modal-wrap{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.65);z-index:100}
+.modal-wrap.open{display:flex}
+.panel{background:#1a1a2e;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px;width:92%;max-width:500px;max-height:82vh;display:flex;flex-direction:column}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ph strong{font-size:16px;color:#f0f0f0}
+.xbtn{background:rgba(255,255,255,.07);border:none;color:#aaa;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:16px}
+.clist{overflow-y:auto;flex:1}
+.ci{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.cthumb{width:58px;height:46px;border-radius:7px;object-fit:cover;background:#16213e;flex-shrink:0}
+.cin{font-weight:700;font-size:13px;color:#f0f0f0}
+.cis{color:#777;font-size:11px;margin-top:2px}
+.cip{color:#e94560;font-weight:800;font-size:13px;margin-top:3px}
+.dbtn{background:rgba(233,69,96,.1);border:1px solid rgba(233,69,96,.2);color:#e94560;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap}
+.empty{color:#555;text-align:center;padding:28px;font-size:14px}
+.cf{margin-top:12px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px;display:flex;justify-content:space-between;align-items:center}
+.ck-btn{background:linear-gradient(135deg,#e94560,#ff6b6b);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-family:Tahoma,Arial,sans-serif;font-weight:700;font-size:13px;cursor:pointer}
+.tot{font-size:13px;color:#aaa}
+.tot-n{color:#e94560;font-weight:800;font-size:19px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:#1a1a2e;border:1px solid rgba(233,69,96,.4);color:#f0f0f0;padding:11px 20px;border-radius:9px;font-size:13px;transition:.3s;opacity:0;z-index:200;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{padding:20px;text-align:center;color:#444;font-size:12px;border-top:1px solid rgba(255,255,255,.04)}
+footer span{color:#e94560}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">حذ</div>
+    <div>
+      <div class="brand-name">متجر الأحذية</div>
+      <div class="brand-sub">أفضل الأحذية بأفضل الأسعار</div>
+    </div>
+  </div>
+  <div class="search"><input id="si" placeholder="ابحث عن حذاء أو ماركة..."/></div>
+  <button class="cart-btn" id="openCart">🛒 السلة <div class="cbadge" id="cb">0</div></button>
+</header>
+
+<section class="hero">
+  <h1>👟 متجر الأحذية</h1>
+  <p>١٠٠ موديل أصلي — Nike · Adidas · Puma · New Balance · Reebok</p>
+  <div class="filters">
+    <button class="fb active" data-cat="all">الكل</button>
+    <button class="fb" data-cat="رياضي">رياضي</button>
+    <button class="fb" data-cat="كاجوال">كاجوال</button>
+    <button class="fb" data-cat="رسمي">رسمي</button>
+    <button class="fb" data-cat="صيفي">صيفي</button>
+    <button class="fb" data-cat="شتوي">شتوي</button>
+    <button class="fb" data-cat="أطفال">أطفال</button>
+    <button class="fb" data-cat="نسائي">نسائي</button>
+  </div>
+</section>
+
+<div class="sort-bar">
+  <div class="count" id="countTxt">١٠٠ منتج</div>
+  <select class="sort-sel" id="sortSel">
+    <option value="default">الترتيب الافتراضي</option>
+    <option value="price-asc">السعر: الأقل أولاً</option>
+    <option value="price-desc">السعر: الأعلى أولاً</option>
+    <option value="name">الاسم أبجدياً</option>
+  </select>
+</div>
+
+<main class="grid" id="products"></main>
+<footer>&copy; 2025 <span>متجر الأحذية</span> — كل الحقوق محفوظة</footer>
+
+<div class="modal-wrap" id="cartModal">
+  <div class="panel">
+    <div class="ph"><strong>🛒 سلة مشترياتك</strong><button class="xbtn" id="closeCart">✕</button></div>
+    <div class="clist" id="cartContent"></div>
+    <div class="cf">
+      <div><div class="tot">الإجمالي</div><div class="tot-n" id="totAmt">0 ج.م</div></div>
+      <button class="ck-btn" id="checkout">إتمام الدفع ←</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// صور Unsplash حقيقية لأحذية حسب الماركة والنوع
+const imgs = {
+  nike_sport: [
+    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1579338559194-a162d19bf842?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1520316587275-5e4f06f355e3?w=400&h=300&fit=crop',
+  ],
+  adidas_sport: [
+    'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1556906781-9a412961a28c?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&h=300&fit=crop',
+  ],
+  puma: [
+    'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&h=300&fit=crop',
+  ],
+  nb: [
+    'https://images.unsplash.com/photo-1539185441755-769473a23570?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1465453869711-7e174808ace9?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1571736772567-a523f15d47a7?w=400&h=300&fit=crop',
+  ],
+  reebok: [
+    'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400&h=300&fit=crop',
+  ],
+  casual: [
+    'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1470087482878-87caa9f318f3?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1507464098880-e367bc5d2c08?w=400&h=300&fit=crop',
+  ],
+  formal: [
+    'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1631542093574-6f8c97fc1dfd?w=400&h=300&fit=crop',
+  ],
+  summer: [
+    'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?w=400&h=300&fit=crop',
+  ],
+  winter: [
+    'https://images.unsplash.com/photo-1608256246200-d8f18c9d9b96?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=300&fit=crop',
+  ],
+  kids: [
+    'https://images.unsplash.com/photo-1559703248-dcaaec9fab78?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1555274175-6cbf6f3b137b?w=400&h=300&fit=crop',
+  ],
+  women: [
+    'https://images.unsplash.com/photo-1562273138-f46be4ebdf33?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1596703263926-eb0762ee17e4?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1581101767113-1677fc2beaa8?w=400&h=300&fit=crop',
+    'https://images.unsplash.com/photo-1604671801908-06a9d4c1b985?w=400&h=300&fit=crop',
+  ],
+};
+
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function pick(arr,i){return arr[i%arr.length]}
+
+const brands=['Nike','Adidas','Puma','New Balance','Reebok','Jordan','Skechers','Vans','Converse','Timberland'];
+const badges=['new','sale','hot',null,null,null];
+const cats=['رياضي','كاجوال','رسمي','صيفي','شتوي','أطفال','نسائي'];
+
+const models={
+  'رياضي':[
+    ['Air Max 270','Air Force 1','React Infinity','Zoom Pegasus','Free Run'],
+    ['Ultraboost 22','NMD R1','Stan Smith','Superstar','EQT'],
+    ['RS-X','Future Rider','Suede Classic','Retaliate','Velocity Nitro'],
+    ['990v5','574','Fresh Foam 1080','FuelCell','ARISHI'],
+    ['Classic Leather','Nano X','Floatride','Zig Kinetica','Club C'],
+  ],
+  'كاجوال':[
+    ['Air Jordan 1','Cortez','Dunk Low','Blazer Mid','Killshot'],
+    ['Gazelle','Samba','Continental 80','Campus','Forum'],
+    ['Cali','Smash','Platform','Basket Heart','Mayze'],
+    ['996','CT300','X-90','Numeric','AM574'],
+    ['Classic Nylon','Princess','Workout','Ex-O-Fit','Freestyle'],
+  ],
+  'رسمي':[
+    ['Oxford Classic','Derby Premium','Monk Strap','Brogue Elite','Cap Toe'],
+    ['Derby Leather','Loafer Comfort','Oxford Slim','Brogues Pro','Lace Up'],
+    ['Formal Runner','Business Edge','Office Pro','Smart Casual','Executive'],
+    ['452 Formal','827 Dress','Suede Formal','X-Classic','Work Plus'],
+    ['Club Formal','Beatnik','Freestyle Hi','Princess Dress','Classic Formal'],
+  ],
+  'صيفي':[
+    ['Benassi JDI','Kawa','Off-Court','Ultra Comfort','Victori'],
+    ['Adilette','Adissage','Voloomix','Comfort Slide','Eezay'],
+    ['Popcat','Cool Cat','Divecat','Softride','Leadcat'],
+    ['Cush+','Sport Slide','Record Slide','SL20','Ren'],
+    ['Sublite','Heritage','Crossfit Nano','Slide Classic','Energen'],
+  ],
+  'شتوي':[
+    ['ACG Mowabb','Manoa','Woodside','Pendleton','Tanque'],
+    ['Terrex Swift','AX3','Hiker','Snowpitch','Terrex AX4'],
+    ['Tazon 6','Desierto','Tsugi Netfit','Trailfox','Evofit'],
+    ['Fresh Foam Roav','Hierro v6','Crag v2','MT10','1300'],
+    ['Ridgerider','Sublite Cushion','Lifter Pro','Trail Runner','AllTrain'],
+  ],
+  'أطفال':[
+    ['Air Max Jr','Dynamo Go','Tanjun','Revolution 6','T-Lite'],
+    ['Duramo SL','FortaRun','Tensaur','Altarun','RapidaRun'],
+    ['Popcat Kids','Suede Toddler','RS-Z Kids','Future Rider Jr','Softride Enzo'],
+    ['440 Kids','311 Jr','1000 Toddler','Aravali Kid','574 Jr'],
+    ['Zignano Kids','Classic Jr','Sub Lite','Zig Elusion','Almotio'],
+  ],
+  'نسائي':[
+    ['React Vision','P-6000','Renew Run','LD-1000','Juniper'],
+    ['Cloudfoam Pure','Solar Boost','Swift Run','Lite Racer','Edge Lux'],
+    ['Cali Dream','Muse Echo','Popcat W','Enzo 2','Softride Sophia'],
+    ['WX Fresh Foam','520v7','Dynasoft','Beacon v3','Vizo Pro'],
+    ['Forever Floatride','SoftDrive','Zig Pulse','Energen Route','Harmony Road'],
+  ],
+};
+
+const imgMap={
+  'رياضي':{Nike:'nike_sport',Adidas:'adidas_sport',Puma:'puma','New Balance':'nb',Reebok:'reebok',Jordan:'nike_sport',Skechers:'casual',Vans:'casual',Converse:'casual',Timberland:'casual'},
+  'كاجوال':{Nike:'casual',Adidas:'casual',Puma:'casual','New Balance':'casual',Reebok:'casual',Jordan:'casual',Skechers:'casual',Vans:'casual',Converse:'casual',Timberland:'casual'},
+  'رسمي':{Nike:'formal',Adidas:'formal',Puma:'formal','New Balance':'formal',Reebok:'formal',Jordan:'formal',Skechers:'formal',Vans:'formal',Converse:'formal',Timberland:'formal'},
+  'صيفي':{Nike:'summer',Adidas:'summer',Puma:'summer','New Balance':'summer',Reebok:'summer',Jordan:'summer',Skechers:'summer',Vans:'summer',Converse:'summer',Timberland:'summer'},
+  'شتوي':{Nike:'winter',Adidas:'winter',Puma:'winter','New Balance':'winter',Reebok:'winter',Jordan:'winter',Skechers:'winter',Vans:'winter',Converse:'winter',Timberland:'winter'},
+  'أطفال':{},
+  'نسائي':{},
+};
+
+function getImg(cat,brand,idx){
+  if(cat==='أطفال') return pick(imgs.kids,idx);
+  if(cat==='نسائي') return pick(imgs.women,idx);
+  const key=(imgMap[cat]||{})[brand]||'casual';
+  return pick(imgs[key]||imgs.casual,idx);
+}
+
+const prices={رياضي:[799,999,1199,1399,1599,1799,1999,2199],كاجوال:[599,749,899,1099,1299],رسمي:[999,1299,1499,1699,1999,2299],صيفي:[299,399,499,599,699],شتوي:[1199,1499,1799,2199,2499],أطفال:[399,499,599,699,799],نسائي:[699,899,1099,1299,1499]};
+
+// توليد 100 منتج
+const products=[];
+let id=1;
+cats.forEach(cat=>{
+  const catModels=models[cat]||models['رياضي'];
+  const catPrices=prices[cat]||prices['رياضي'];
+  brands.forEach((brand,bi)=>{
+    if(id>100) return;
+    const bModels=catModels[bi%catModels.length]||catModels[0];
+    const modelName=Array.isArray(bModels)?bModels[id%bModels.length]:bModels;
+    const price=catPrices[id%catPrices.length];
+    const discount=Math.random()<.25?Math.round(price*1.15/10)*10:null;
+    const badge=badges[id%badges.length];
+    products.push({
+      id,
+      name:`${brand} ${modelName}`,
+      brand,cat,price,
+      oldPrice:discount,
+      badge,
+      img:getImg(cat,brand,id),
+      stars:3+Math.floor(Math.random()*2)+(Math.random()>.5?.5:0),
+    });
+    id++;
+  });
+});
+
+// عدد النجوم
+function starStr(n){
+  let s='';
+  for(let i=0;i<5;i++) s+= i<Math.floor(n)? '★': (n%1&&i===Math.floor(n))? '½': '☆';
+  return s;
+}
+
+let cart=[];
+let activeFilter='all';
+let searchQ='';
+let sortMode='default';
+
+const productsEl=document.getElementById('products');
+const cb=document.getElementById('cb');
+const cartModal=document.getElementById('cartModal');
+const cartContent=document.getElementById('cartContent');
+const totAmt=document.getElementById('totAmt');
+const toast=document.getElementById('toast');
+const countTxt=document.getElementById('countTxt');
+
+function showToast(msg){
+  toast.textContent=msg;toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2200);
+}
+
+function filtered(){
+  let list=products.filter(p=>{
+    const mc=activeFilter==='all'||p.cat===activeFilter;
+    const mq=!searchQ||p.name.includes(searchQ)||p.brand.includes(searchQ)||p.cat.includes(searchQ);
+    return mc&&mq;
+  });
+  if(sortMode==='price-asc') list.sort((a,b)=>a.price-b.price);
+  else if(sortMode==='price-desc') list.sort((a,b)=>b.price-a.price);
+  else if(sortMode==='name') list.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  return list;
+}
+
+function toAr(n){return n.toString().replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d])}
+
+function render(){
+  const list=filtered();
+  countTxt.textContent=toAr(list.length)+' منتج';
+  productsEl.innerHTML='';
+  if(!list.length){productsEl.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#555;padding:40px;font-size:14px">لا توجد نتائج مطابقة 😕</p>';return}
+  const frag=document.createDocumentFragment();
+  list.forEach(p=>{
+    const d=document.createElement('div');d.className='card';
+    let btag='';
+    if(p.badge==='new') btag='<div class="btag new">جديد</div>';
+    else if(p.badge==='sale') btag='<div class="btag sale">خصم</div>';
+    else if(p.badge==='hot') btag='<div class="btag hot">الأكثر طلباً</div>';
+    d.innerHTML=`${btag}
+      <img class="card-img" src="${p.img}" alt="${p.name}" loading="lazy"/>
+      <div class="card-body">
+        <div class="card-brand">${p.brand}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-cat">${p.cat}</div>
+        <div class="card-row">
+          <div>
+            <div class="card-price">${p.price.toLocaleString('ar-EG')} ج.م</div>
+            ${p.oldPrice?`<div class="old-price">${p.oldPrice.toLocaleString('ar-EG')} ج.م</div>`:''}
+          </div>
+          <div class="stars">${starStr(p.stars)}</div>
+        </div>
+        <div class="card-actions">
+          <select class="ssel" id="sz${p.id}">
+            <option>38</option><option>39</option><option>40</option><option selected>41</option><option>42</option><option>43</option><option>44</option><option>45</option>
+          </select>
+          <button class="abtn" data-id="${p.id}">+ أضف للسلة</button>
+        </div>
+      </div>`;
+    frag.appendChild(d);
+  });
+  productsEl.appendChild(frag);
+  productsEl.querySelectorAll('.abtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const pid=Number(btn.getAttribute('data-id'));
+      const p=products.find(x=>x.id===pid);
+      const sz=document.getElementById('sz'+pid).value;
+      cart.push({...p,size:sz,uid:Date.now()+Math.random()});
+      updateBadge();
+      showToast(`✅ ${p.name} — مقاس ${sz}`);
+    });
+  });
+}
+
+function updateBadge(){
+  if(cart.length){cb.style.display='flex';cb.textContent=cart.length}
+  else cb.style.display='none';
+}
+
+function renderCart(){
+  if(!cart.length){cartContent.innerHTML='<div class="empty">🛒 السلة فارغة</div>';totAmt.textContent='0 ج.م';return}
+  const total=cart.reduce((s,i)=>s+i.price,0);
+  totAmt.textContent=total.toLocaleString('ar-EG')+' ج.م';
+  cartContent.innerHTML='';
+  const f=document.createDocumentFragment();
+  cart.forEach(item=>{
+    const el=document.createElement('div');el.className='ci';
+    el.innerHTML=`<img class="cthumb" src="${item.img}" alt="${item.name}" loading="lazy"/>
+      <div style="flex:1">
+        <div class="cin">${item.name}</div>
+        <div class="cis">مقاس ${item.size} · ${item.cat}</div>
+        <div class="cip">${item.price.toLocaleString('ar-EG')} ج.م</div>
+      </div>
+      <button class="dbtn" data-uid="${item.uid}">حذف</button>`;
+    f.appendChild(el);
+  });
+  cartContent.appendChild(f);
+  cartContent.querySelectorAll('.dbtn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      cart=cart.filter(i=>String(i.uid)!==b.getAttribute('data-uid'));
+      updateBadge();renderCart();
+    });
+  });
+}
+
+document.getElementById('openCart').addEventListener('click',()=>{cartModal.classList.add('open');renderCart()});
+document.getElementById('closeCart').addEventListener('click',()=>cartModal.classList.remove('open'));
+cartModal.addEventListener('click',e=>{if(e.target===cartModal)cartModal.classList.remove('open')});
+
+document.getElementById('checkout').addEventListener('click',()=>{
+  if(!cart.length){showToast('❌ السلة فارغة');return}
+  const total=cart.reduce((s,i)=>s+i.price,0);
+  cart=[];updateBadge();cartModal.classList.remove('open');
+  setTimeout(()=>showToast('🎉 تم الطلب بنجاح! الإجمالي: '+total.toLocaleString('ar-EG')+' ج.م'),300);
+});
+
+document.querySelectorAll('.fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');activeFilter=b.getAttribute('data-cat');render();
+  });
+});
+
+document.getElementById('si').addEventListener('input',e=>{searchQ=e.target.value.trim();render()});
+document.getElementById('sortSel').addEventListener('change',e=>{sortMode=e.target.value;render()});
+
+render();
+</script>
+</body>
+</html>
